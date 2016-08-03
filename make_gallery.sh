@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 rm -rf thumbnails
 rm ~/Dropbox/Wallpapers/*
@@ -6,16 +7,16 @@ mkdir thumbnails
 
 username="jonascarpay"
 
-echo "### Wallpapers" > README.md
-echo "My current wallpaper rotation" >> README.md
+cat readme_header.md > README.md
 echo "" >> README.md
 
+n=$(ls papes/ | wc -l)
 i=0
 
 for p in papes/*
 do
     ((i++))
-    echo -e "$i\t${p/papes/}"
+    printf '%4d/%3d: %s\n' "$i" "$n" "${p/papes\//}"
 
     # Create thumbnail
     convert -resize 200x "$p" "${p/papes/thumbnails}"
