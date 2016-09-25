@@ -2,7 +2,6 @@
 set -e
 
 rm -rf thumbnails
-rm ~/Dropbox/Wallpapers/*
 mkdir thumbnails
 
 username="jonascarpay"
@@ -22,7 +21,15 @@ do
     convert -resize 200x "$p" "${p/papes/thumbnails}"
     # Make entry in README
     echo "[![${p/papes\//}](https://raw.githubusercontent.com/$username/Wallpapers/master/thumbnails${p/papes/})](https://raw.githubusercontent.com/$username/Wallpapers/master/$p)" >> README.md
-
-    # Copy to Dropbox
-    cp "$p" ~/Dropbox/Wallpapers/
 done
+
+if [ -d "$HOME/Dropbox/Wallpapers" ]; then
+
+  rm ~/Dropbox/Wallpapers/*
+
+  for p in papes/*
+  do
+    cp "$p" ~/Dropbox/Wallpapers/
+  done
+
+fi
