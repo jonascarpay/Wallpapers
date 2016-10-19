@@ -15,7 +15,7 @@ i=0
 for p in papes/*
 do
     ((i++))
-    printf '%4d/%3d: %s\n' "$i" "$n" "${p/papes\//}"
+    printf '%4d/%d: %s\n' "$i" "$n" "${p/papes\//}"
 
     # Create thumbnail
     convert -resize 200x "$p" "${p/papes/thumbnails}"
