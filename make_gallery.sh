@@ -4,32 +4,27 @@
 rm -rf thumbnails
 mkdir thumbnails
 
-username="jonascarpay"
+thumb_url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master/thumbnails"
+pape_url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master/papes"
 
-cat readme_header.md > README.md
-echo "" >> README.md
+echo "### Wallpapers" >README.md
+echo "My current wallpaper rotation" >>README.md
+echo "" >>README.md
 
 n=$(ls papes/ | wc -l)
 i=0
 
-for p in papes/*
-do
-    ((i++))
-    printf '%4d/%d: %s\n' "$i" "$n" "${p/papes\//}"
+for src in papes/*; do
+  ((i++))
+  printf '%4d/%d: %s\n' "$i" "$n" "${src/papes\//}"
 
-    # Create thumbnail
-    convert -resize 200x "$p" "${p/papes/thumbnails}"
-    # Make entry in README
-    echo "[![${p/papes\//}](https://raw.githubusercontent.com/$username/Wallpapers/master/thumbnails${p/papes/})](https://raw.githubusercontent.com/$username/Wallpapers/master/$p)" >> README.md
+  trg="${src/papes/thumbnails}"
+
+  convert -resize 200x "$src" "$trg"
+
+  filename="$(basename "$src")"
+  thumb_url="$thumb_url_root/$filename"
+  pape_url="$pape_url_root/$filename"
+
+  echo "[![$filename](${thumb_url// /%20})](${pape_url// /%20})" >>README.md
 done
-
-if [ -d "$HOME/Dropbox/Wallpapers" ]; then
-
-  rm ~/Dropbox/Wallpapers/*
-
-  for p in papes/*
-  do
-    cp "$p" ~/Dropbox/Wallpapers/
-  done
-
-fi
