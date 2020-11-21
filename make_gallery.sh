@@ -1,30 +1,36 @@
 #!/usr/bin/env bash
 # set -e
 
+# Usage: ./make_gallery.sh
+#
+# Run in a directory with a "papes/" subdirectory, and it will create a
+# "thumbnails/" subdirectory.
+#
+# Uses imagemagick's `convert`, so make sure that's installed.
+# On Nix, nix-shell -p imagemagick --run ./make_gallery.sh
+
 rm -rf thumbnails
 mkdir thumbnails
 
-thumb_url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master/thumbnails"
-pape_url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master/papes"
+url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master"
 
 echo "### Wallpapers" >README.md
 echo "My current wallpaper rotation" >>README.md
 echo "" >>README.md
 
-n=$(ls papes/ | wc -l)
+total=$(ls papes/ | wc -l)
 i=0
 
 for src in papes/*; do
   ((i++))
-  printf '%4d/%d: %s\n' "$i" "$n" "${src/papes\//}"
-
-  trg="${src/papes/thumbnails}"
-
-  convert -resize 200x "$src" "$trg"
-
   filename="$(basename "$src")"
-  thumb_url="$thumb_url_root/$filename"
-  pape_url="$pape_url_root/$filename"
+  printf '%4d/%d: %s\n' "$i" "$total" "$filename"
 
-  echo "[![$filename](${thumb_url// /%20})](${pape_url// /%20})" >>README.md
+  convert -resize 200x "$src" "${src/papes/thumbnails}"
+
+  filename_escaped="${filename// /%20}"
+  thumb_url="$url_root/thumbnails/$filename_escaped"
+  pape_url="$url_root/papes/$filename_escaped"
+
+  echo "[![$filename]($thumb_url)]($pape_url)" >>README.md
 done
