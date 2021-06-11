@@ -18,19 +18,20 @@ echo "### Wallpapers" >README.md
 echo "My current wallpaper rotation" >>README.md
 echo "" >>README.md
 
-total=$(ls papes/ | wc -l)
+total=$(ls papes | wc -l)
+
 i=0
 
-for src in papes/*; do
-  ((i++))
-  filename="$(basename "$src")"
-  printf '%4d/%d: %s\n' "$i" "$total" "$filename"
+git ls-files papes/ -z | while read -d $'\0' src; do
+    ((i++))
+    filename="$(basename "$src")"
+    printf '%4d/%d: %s\n' "$i" "$total" "$filename"
 
-  convert -resize 200x "$src" "${src/papes/thumbnails}"
+    convert -resize 200x "$src" "${src/papes/thumbnails}"
 
-  filename_escaped="${filename// /%20}"
-  thumb_url="$url_root/thumbnails/$filename_escaped"
-  pape_url="$url_root/papes/$filename_escaped"
+    filename_escaped="${filename// /%20}"
+    thumb_url="$url_root/thumbnails/$filename_escaped"
+    pape_url="$url_root/papes/$filename_escaped"
 
-  echo "[![$filename]($thumb_url)]($pape_url)" >>README.md
+    echo "[![$filename]($thumb_url)]($pape_url)" >>README.md
 done
