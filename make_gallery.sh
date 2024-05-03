@@ -12,8 +12,6 @@ set -e
 mv thumbnails thumbnails_old
 mkdir thumbnails
 
-url_root="https://raw.githubusercontent.com/jonascarpay/Wallpapers/master"
-
 echo "### Wallpapers" >README.md
 echo "My current wallpaper rotation" >>README.md
 echo "" >>README.md
@@ -38,8 +36,8 @@ git ls-files papes/ -z | while read -d $'\0' src; do
 	fi
 
 	filename_escaped="${filename// /%20}"
-	thumb_url="$url_root/thumbnails/$filename_escaped"
-	pape_url="$url_root/papes/$filename_escaped"
+	thumb_url="thumbnails/$filename_escaped"
+	pape_url="papes/$filename_escaped"
 
 	echo "[![$filename]($thumb_url)]($pape_url)" >>README.md
 done
